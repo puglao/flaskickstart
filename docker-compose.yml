@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    develop:
+      watch:
+        - action: rebuild
+          path: requirements.txt
+        - action: rebuild
+          path: Dockerfile
+        - action: sync+restart
+          path: app.py
+          target: /app/app.py
+  cloudflared:
+    image: cloudflare/cloudflared
+    command: 'tunnel --url http://app:5000'
